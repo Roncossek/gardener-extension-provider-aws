@@ -102,7 +102,7 @@ func ValidateWorkersAgainstCloudProfileOnCreation(
 	region string,
 	awsCloudProfile *apisaws.CloudProfileConfig,
 	machineTypes []v1beta1.MachineType,
-	capabilitiesDefinitions []v1beta1.CapabilityDefinition,
+	capabilityDefinitions []v1beta1.CapabilityDefinition,
 	fldPath *field.Path,
 ) field.ErrorList {
 	allErrs := field.ErrorList{}
@@ -114,7 +114,7 @@ func ValidateWorkersAgainstCloudProfileOnCreation(
 			continue
 		}
 
-		allErrs = append(allErrs, validateWorkerConfigAgainstCloudProfile(w, region, awsCloudProfile, machineType.Capabilities, capabilitiesDefinitions, fldPath.Index(i))...)
+		allErrs = append(allErrs, validateWorkerConfigAgainstCloudProfile(w, region, awsCloudProfile, machineType.Capabilities, capabilityDefinitions, fldPath.Index(i))...)
 	}
 	return allErrs
 }
@@ -125,7 +125,7 @@ func ValidateWorkersAgainstCloudProfileOnUpdate(
 	region string,
 	awsCloudProfile *apisaws.CloudProfileConfig,
 	machineTypes []v1beta1.MachineType,
-	capabilitiesDefinitions []v1beta1.CapabilityDefinition,
+	capabilityDefinitions []v1beta1.CapabilityDefinition,
 	fldPath *field.Path,
 ) field.ErrorList {
 	allErrs := field.ErrorList{}
@@ -148,7 +148,7 @@ func ValidateWorkersAgainstCloudProfileOnUpdate(
 				continue
 			}
 
-			allErrs = append(allErrs, validateWorkerConfigAgainstCloudProfile(newWorker, region, awsCloudProfile, machineType.Capabilities, capabilitiesDefinitions, fldPath.Index(i))...)
+			allErrs = append(allErrs, validateWorkerConfigAgainstCloudProfile(newWorker, region, awsCloudProfile, machineType.Capabilities, capabilityDefinitions, fldPath.Index(i))...)
 		}
 	}
 
@@ -160,7 +160,7 @@ func validateWorkerConfigAgainstCloudProfile(
 	region string,
 	awsCloudProfile *apisaws.CloudProfileConfig,
 	machineCapabilities v1beta1.Capabilities,
-	capabilitiesDefinitions []v1beta1.CapabilityDefinition,
+	capabilityDefinitions []v1beta1.CapabilityDefinition,
 	fldPath *field.Path,
 ) field.ErrorList {
 	var (
@@ -173,7 +173,7 @@ func validateWorkerConfigAgainstCloudProfile(
 		return allErrs
 	}
 
-	if _, err := apisawshelper.FindImageInCloudProfile(awsCloudProfile, image.Name, image.Version, region, architecture, machineCapabilities, capabilitiesDefinitions); err != nil {
+	if _, err := apisawshelper.FindImageInCloudProfile(awsCloudProfile, image.Name, image.Version, region, architecture, machineCapabilities, capabilityDefinitions); err != nil {
 		allErrs = append(allErrs, field.Invalid(fldPath.Child("machine", "image"), image, fmt.Sprint(err)))
 	}
 	return allErrs
